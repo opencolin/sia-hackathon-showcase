@@ -199,7 +199,7 @@
   </div>
 </div></header>
 
-<section class="prizes wrap" aria-label="Prizes and winners">
+<section class="prizes wrap" hidden aria-label="Prizes and winners">
   <div class="sec-head"><h2>🏆 <span class="g">Track Winners</span></h2><span>Meta Ray-Bans for first place in each of the three tracks</span></div>
   <div class="prize-grid" id="prizeGrid"></div>
 </section>
@@ -309,6 +309,9 @@ const TRACKINFO=[
 const byName=n=>P.find(p=>p.n===n);
 function isWinner(p){return Object.values(WINNERS).includes(p.n)}
 function renderPrizes(){
+  const sec=document.querySelector('.prizes');
+  if(!Object.values(WINNERS).some(Boolean)){ if(sec) sec.hidden=true; return; } // hidden until winners are set
+  if(sec) sec.hidden=false;
   document.getElementById('prizeGrid').innerHTML=TRACKINFO.map(t=>{
     const w=WINNERS[t.key]; const p=w&&byName(w);
     const winLine = w
