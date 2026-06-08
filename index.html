@@ -109,7 +109,7 @@
   .card::before{content:"";position:absolute;inset:0;border-radius:var(--r);padding:1px;
     background:linear-gradient(140deg,transparent 40%,var(--accent,var(--acc)) 140%);
     -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:.22s}
+    -webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:.22s;pointer-events:none}
   .card:hover::before{opacity:.55}
   .card-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .pill{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.03em;
@@ -136,6 +136,28 @@
   .btn.disabled{opacity:.4;pointer-events:none}
   .none{font-size:12.5px;color:var(--faint);font-family:"JetBrains Mono",monospace;padding-top:14px;border-top:1px solid var(--line)}
 
+  /* prizes / winners */
+  .prizes{padding:50px 24px 8px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+  .sec-head h2{font-family:"Space Grotesk";font-weight:700;font-size:26px;letter-spacing:-.02em}
+  .sec-head h2 .g{background:linear-gradient(120deg,#ffd76a,#ffb43d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .sec-head span{color:var(--faint);font-size:14px}
+  .prize-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:720px){.prize-grid{grid-template-columns:1fr}}
+  .prize{position:relative;border:1px solid var(--line2);border-radius:var(--r);padding:22px;
+    background:linear-gradient(160deg,var(--panel2),var(--panel));overflow:hidden}
+  .prize::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(120% 100% at 0% 0%,rgba(255,215,106,.10),transparent 55%)}
+  .prize .medal{font-size:23px;filter:drop-shadow(0 0 12px rgba(255,215,106,.35))}
+  .prize .ptrack{font-family:"Space Grotesk";font-weight:600;font-size:18px;margin-top:8px}
+  .prize .pwin{font-size:15px;color:#ffd76a;margin-top:7px;font-weight:600}
+  .prize .pwin.tba{color:var(--faint);font-weight:400;font-size:13.5px}
+  .prize .pwin a{color:#ffd76a;border-bottom:1px solid rgba(255,215,106,.35)}
+  .prize .pprize{margin-top:15px;font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;letter-spacing:.02em}
+  .badge-win{display:inline-flex;align-items:center;gap:5px;font-family:"JetBrains Mono",monospace;font-size:10.5px;
+    color:#ffd76a;border:1px solid rgba(255,215,106,.4);background:rgba(255,215,106,.09);padding:4px 9px;border-radius:6px}
+  .card.winner{border-color:rgba(255,215,106,.45)}
+  .card.winner::before{background:linear-gradient(140deg,transparent 25%,#ffd76a 150%);opacity:.4}
   footer{border-top:1px solid var(--line);margin-top:60px;padding:40px 0 64px;color:var(--faint);font-size:13.5px}
   footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
   footer a{color:var(--muted)}
@@ -169,6 +191,11 @@
     <div class="stat"><div class="n"><span class="grad">10</span></div><div class="l">RAN ON NEBIUS</div></div>
   </div>
 </div></header>
+
+<section class="prizes wrap" aria-label="Prizes and winners">
+  <div class="sec-head"><h2>🏆 <span class="g">Track Winners</span></h2><span>Meta Ray-Bans for first place in each of the three tracks</span></div>
+  <div class="prize-grid" id="prizeGrid"></div>
+</section>
 
 <div class="toolbar" id="projects"><div class="wrap" id="filters"></div></div>
 
@@ -249,6 +276,29 @@ const P = [
    code:"https://github.com/ayaelnakeb/sia",demo:"https://drive.google.com/file/d/1YQYcuV_lFqmOxhatRT52g1uhLHb2VsPu/view?usp=sharing"}
 ];
 
+// Track first-prize winners. Fill each with the winning project's exact `n` (name) below.
+const WINNERS={Applied:null,Framework:null,Research:null};
+const TRACKINFO=[
+  {key:"Applied",label:"Applied AI Track",color:"#46d6ff"},
+  {key:"Framework",label:"Framework Enhancement",color:"#c08bff"},
+  {key:"Research",label:"Research Track",color:"#5ef2a8"}
+];
+const byName=n=>P.find(p=>p.n===n);
+function isWinner(p){return Object.values(WINNERS).includes(p.n)}
+function renderPrizes(){
+  document.getElementById('prizeGrid').innerHTML=TRACKINFO.map(t=>{
+    const w=WINNERS[t.key]; const p=w&&byName(w);
+    const winLine = w
+      ? `<div class="pwin">${p&&p.code?`<a href="${p.code}" target="_blank" rel="noopener">${w} ↗</a>`:w}</div>`
+      : `<div class="pwin tba">Winner to be featured</div>`;
+    return `<div class="prize" style="--accent:${t.color}">
+      <div class="medal">🏆</div>
+      <div class="ptrack">${t.label}</div>
+      ${winLine}
+      <div class="pprize">🕶 META RAY-BANS · FIRST PRIZE</div>
+    </div>`;
+  }).join('');
+}
 const TRACKS=["All","Applied","Framework","Research"];
 let active="All";
 const grid=document.getElementById('grid');
@@ -277,9 +327,11 @@ function card(p){
   const footer = links
     ? `<div class="links">${links}</div>`
     : `<div class="none">${p.note==="repo private"?"// repo private — demo only":"// no public links"}</div>`;
-  return `<article class="card" data-track="${p.t}" style="--accent:${accent}">
+  const win=isWinner(p);
+  return `<article class="card${win?' winner':''}" data-track="${p.t}" style="--accent:${accent}">
     <div class="card-top">
       <span class="pill ${cls}">${p.t}</span>
+      ${win?'<span class="badge-win">🏆 WINNER</span>':''}
       ${p.nb?'<span class="nebius"><span class="b"></span>NEBIUS</span>':''}
     </div>
     <h3>${p.n}</h3>
@@ -289,11 +341,13 @@ function card(p){
   </article>`;
 }
 function render(){
-  const list=active==="All"?P:P.filter(p=>p.t===active);
+  const base=active==="All"?P.slice():P.filter(p=>p.t===active);
+  const list=base.sort((a,b)=>(isWinner(b)?1:0)-(isWinner(a)?1:0)); // winners first
   grid.innerHTML=list.map(card).join('');
   const cards=[...grid.children];
   cards.forEach((c,i)=>{setTimeout(()=>c.classList.add('in'),40+i*45)});
 }
+renderPrizes();
 render();
 </script>
 </body>
