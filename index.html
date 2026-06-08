@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Self-Improving AI Agents · Hackathon Showcase</title>
+<meta name="description" content="19 projects built at the Self-Improving AI (SIA) Agents Emergency Hackathon — AGI House SF × Nebius. Agents that rewrite their own harness and weights." />
+<meta property="og:title" content="Self-Improving AI Agents — Hackathon Showcase" />
+<meta property="og:description" content="19 projects built in 9 hours on the SIA framework. AGI House SF × Nebius." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#070809; --bg2:#0c0e12; --panel:#101319; --panel2:#141821;
+    --line:#222732; --line2:#2d3340;
+    --ink:#eef1f6; --muted:#9aa4b3; --faint:#6b7585;
+    --acc:#5ef2a8; --acc2:#46d6ff; --acc-dim:#1c2b27;
+    --applied:#46d6ff; --framework:#c08bff; --research:#5ef2a8;
+    --r:16px;
+    --maxw:1200px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Inter",system-ui,sans-serif; line-height:1.55;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--acc);color:#04130c}
+
+  /* backdrop */
+  .bg-grid{position:fixed;inset:0;z-index:-2;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:46px 46px; opacity:.18;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 75%);}
+  .bg-glow{position:fixed;z-index:-1;top:-30vh;left:50%;transform:translateX(-50%);
+    width:120vw;height:80vh;pointer-events:none;
+    background:radial-gradient(50% 50% at 50% 50%,rgba(94,242,168,.10),transparent 70%),
+               radial-gradient(40% 40% at 70% 30%,rgba(70,214,255,.08),transparent 70%);}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+    background:rgba(7,8,9,.7);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:600;letter-spacing:-.01em}
+  .brand .mark{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--acc),var(--acc2));color:#04130c;font-weight:700}
+  .nav-links{display:flex;gap:22px;font-size:14px;color:var(--muted)}
+  .nav-links a:hover{color:var(--ink)}
+  @media(max-width:640px){.nav-links{display:none}}
+
+  /* hero */
+  header{padding:88px 0 48px;text-align:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;
+    font-size:12.5px;letter-spacing:.04em;color:var(--acc);
+    border:1px solid var(--acc-dim);background:rgba(94,242,168,.05);
+    padding:6px 14px;border-radius:999px;margin-bottom:26px}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc)}
+  h1{font-family:"Space Grotesk";font-weight:700;letter-spacing:-.03em;line-height:1.02;
+    font-size:clamp(38px,7vw,76px);margin-bottom:22px}
+  h1 .grad{background:linear-gradient(110deg,var(--acc) 10%,var(--acc2) 90%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .sub{max-width:660px;margin:0 auto;color:var(--muted);font-size:clamp(16px,2.2vw,19px)}
+  .sub b{color:var(--ink);font-weight:600}
+  .meta-row{margin-top:30px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .chip{font-size:13px;color:var(--muted);border:1px solid var(--line2);border-radius:999px;
+    padding:7px 15px;background:var(--panel)}
+  .chip b{color:var(--ink)}
+  .paper{margin-top:26px;font-size:13.5px;color:var(--faint)}
+  .paper a{color:var(--acc2);border-bottom:1px solid rgba(70,214,255,.3)}
+  .paper a:hover{color:var(--acc)}
+
+  /* stats strip */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin:54px 0 8px}
+  .stat{background:var(--panel);padding:22px 18px;text-align:center}
+  .stat .n{font-family:"Space Grotesk";font-weight:700;font-size:30px;line-height:1}
+  .stat .n .grad{background:linear-gradient(120deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .stat .l{font-size:12.5px;color:var(--faint);margin-top:7px;letter-spacing:.02em}
+  @media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+  /* filters */
+  .toolbar{position:sticky;top:62px;z-index:40;background:rgba(7,8,9,.82);backdrop-filter:blur(10px);
+    padding:20px 0 16px;margin-top:40px;border-bottom:1px solid var(--line)}
+  .toolbar .wrap{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .filter{font-family:"Inter";font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;
+    border:1px solid var(--line2);background:var(--panel);padding:8px 15px;border-radius:999px;
+    transition:.18s;display:inline-flex;align-items:center;gap:8px}
+  .filter:hover{color:var(--ink);border-color:var(--faint)}
+  .filter[aria-pressed="true"]{color:#04130c;background:linear-gradient(120deg,var(--acc),var(--acc2));border-color:transparent;font-weight:600}
+  .filter .ct{font-family:"JetBrains Mono",monospace;font-size:11px;opacity:.7}
+  .filter[aria-pressed="true"] .ct{opacity:.85}
+
+  /* grid */
+  main{padding:36px 0 30px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px}
+  .card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+    padding:22px;display:flex;flex-direction:column;gap:13px;transition:.22s ease;
+    opacity:0;transform:translateY(14px)}
+  .card.in{opacity:1;transform:none}
+  .card:hover{border-color:var(--line2);background:var(--panel2);transform:translateY(-3px);
+    box-shadow:0 18px 50px -24px rgba(94,242,168,.25)}
+  .card::before{content:"";position:absolute;inset:0;border-radius:var(--r);padding:1px;
+    background:linear-gradient(140deg,transparent 40%,var(--accent,var(--acc)) 140%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:.22s}
+  .card:hover::before{opacity:.55}
+  .card-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .pill{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.03em;
+    padding:4px 9px;border-radius:6px;border:1px solid;text-transform:uppercase}
+  .pill.applied{color:var(--applied);border-color:rgba(70,214,255,.35);background:rgba(70,214,255,.07)}
+  .pill.framework{color:var(--framework);border-color:rgba(192,139,255,.35);background:rgba(192,139,255,.07)}
+  .pill.research{color:var(--research);border-color:rgba(94,242,168,.35);background:rgba(94,242,168,.07)}
+  .nebius{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--faint);
+    font-family:"JetBrains Mono",monospace}
+  .nebius .b{width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px var(--acc)}
+  .card h3{font-family:"Space Grotesk";font-weight:600;font-size:20px;letter-spacing:-.01em;line-height:1.2}
+  .by{font-size:13px;color:var(--faint);font-family:"JetBrains Mono",monospace}
+  .by a{color:var(--muted)}
+  .by a:hover{color:var(--acc2)}
+  .desc{font-size:14.3px;color:var(--muted);flex:1}
+  .links{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;padding-top:14px;border-top:1px solid var(--line)}
+  .btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;
+    padding:8px 13px;border-radius:9px;border:1px solid var(--line2);color:var(--ink);
+    background:var(--bg2);transition:.16s}
+  .btn:hover{border-color:var(--faint);background:#171b24;transform:translateY(-1px)}
+  .btn.primary{border-color:rgba(94,242,168,.4);background:rgba(94,242,168,.08);color:var(--acc)}
+  .btn.primary:hover{background:rgba(94,242,168,.14)}
+  .btn svg{width:14px;height:14px}
+  .btn.disabled{opacity:.4;pointer-events:none}
+  .none{font-size:12.5px;color:var(--faint);font-family:"JetBrains Mono",monospace;padding-top:14px;border-top:1px solid var(--line)}
+
+  footer{border-top:1px solid var(--line);margin-top:60px;padding:40px 0 64px;color:var(--faint);font-size:13.5px}
+  footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+  footer a{color:var(--muted)}
+  footer a:hover{color:var(--acc2)}
+  .foot-links{display:flex;gap:20px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top"><span class="mark">✦</span> SIA Showcase</a>
+  <div class="nav-links">
+    <a href="#projects">Projects</a>
+    <a href="https://github.com/hexo-ai/sia" target="_blank" rel="noopener">SIA Framework</a>
+    <a href="https://www.getoatmeal.com/e/self-improving-ai-sia-agents-emergency-hackathon-by-agi-house-sf-nebius" target="_blank" rel="noopener">Event</a>
+  </div>
+</div></nav>
+
+<header id="top"><div class="wrap">
+  <span class="eyebrow"><span class="dot"></span> EMERGENCY HACKATHON · JUN 6 2026 · SAN FRANCISCO</span>
+  <h1>Agents that<br><span class="grad">rewrite themselves.</span></h1>
+  <p class="sub">19 projects built in 9 hours on <b>SIA</b> — Self-Improving AI with Harness &amp; Weight Updates. A language-model agent that rewrites both its own scaffolding and its underlying model, then keeps the changes that score. Hosted by <b>AGI House SF</b> &amp; <b>Nebius</b>.</p>
+  <p class="paper">Based on the paper <a href="https://github.com/hexo-ai/sia" target="_blank" rel="noopener">SIA: Self-Improving AI with Harness &amp; Weight Updates (Hebbar et al., 2026) ↗</a></p>
+
+  <div class="stats">
+    <div class="stat"><div class="n"><span class="grad">19</span></div><div class="l">PROJECTS SHIPPED</div></div>
+    <div class="stat"><div class="n"><span class="grad">3</span></div><div class="l">TRACKS</div></div>
+    <div class="stat"><div class="n"><span class="grad">9</span></div><div class="l">HOURS TO BUILD</div></div>
+    <div class="stat"><div class="n"><span class="grad">10</span></div><div class="l">RAN ON NEBIUS</div></div>
+  </div>
+</div></header>
+
+<div class="toolbar" id="projects"><div class="wrap" id="filters"></div></div>
+
+<main><div class="wrap"><div class="grid" id="grid"></div></div></main>
+
+<footer><div class="wrap">
+  <div>Showcase of the SIA Agents Emergency Hackathon · AGI House SF × Nebius</div>
+  <div class="foot-links">
+    <a href="https://www.getoatmeal.com/e/self-improving-ai-sia-agents-emergency-hackathon-by-agi-house-sf-nebius" target="_blank" rel="noopener">Event page</a>
+    <a href="https://github.com/hexo-ai/sia" target="_blank" rel="noopener">SIA framework</a>
+    <a href="#top">Back to top</a>
+  </div>
+</div></footer>
+
+<script>
+const ICON = {
+  code:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+  play:'<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>',
+  ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'
+};
+const P = [
+  {n:"SIA Humor Benchmark",h:"actionstockplus-ui",t:"Applied",nb:1,
+   d:"A self-improving “humor enhancer” — runs the SIA loop on subjective humor tasks (picking the funniest caption, punching up quotes) graded by an LLM judge each generation.",
+   code:"https://github.com/actionstockplus-ui/ia-humor-benchmarks"},
+  {n:"JanuSQL",h:"francisco-perez-sorrosal",t:"Applied",nb:1,
+   d:"A self-improving AI that rewrites its own English→SQL agent, graded by executing the SQL on open models. The smaller model gained more (+29% vs +15%).",
+   code:"https://github.com/francisco-perez-sorrosal/sia"},
+  {n:"SIA-improvement",h:"dronomyio",t:"Framework",nb:0,
+   d:"An autonomous research framework for fine-tuning MoE language models — describe the experiment and four collaborating agents orchestrate it, with methodology rigor enforced structurally.",
+   note:"repo private"},
+  {n:"Graph-of-Experiments",h:"hsehskad",t:"Framework",nb:0,
+   d:"Gives the meta-agent a knowledge-graph run memory, writing observations between runs so it can experiment more effectively across generations.",
+   code:"https://github.com/hsehskad/sia"},
+  {n:"deSIAgn · Taste-Shader",h:"rayshineeeee",t:"Research",nb:1,
+   d:"Can an agent self-improve toward someone’s taste? It writes GLSL shaders and rewrites its prompt to match a held-out aesthetic — with a “two-eyes” probe to catch reward-gaming.",
+   code:"https://github.com/rayshineeeee/sia",demo:"https://www.loom.com/share/db7aee46e00241799f61a5f304c240d0"},
+  {n:"Self-Improving Personalized Productivity",h:"TatianaUshakova",t:"Applied",nb:1,
+   d:"Reconstructs a personalized daily activity timeline from messy personal signals, self-improving to label your day more accurately over generations.",
+   code:"https://github.com/TatianaUshakova/self-improvement-agent-hackathon"},
+  {n:"SIL · Self-Improving Learner",h:"SubThought",t:"Research",nb:0,
+   d:"A cognitive-architecture reimagining of SIA: a four-part “Mind” over a shared knowledge base, with cross-run memory and homeostatic goals replacing the fixed generation loop.",
+   code:"https://github.com/SubThought/Sentience/tree/main/SIL"},
+  {n:"SIA on Apple Silicon",h:"tmc",t:"Framework",nb:1,
+   d:"A full SIA agent implemented in Go for local clustered macOS — training and inference on Apple Silicon, including a local LoRA loop and Metal GPU-kernel rewrites.",
+   code:"https://github.com/tmc/sia-apple-silicon"},
+  {n:"SIA Lever",h:"mdkrasnow",t:"Research",nb:1,
+   d:"Teaches the meta-agent to pick the right repair lever — harness, weights, or both — from a failed run, with real LoRA fine-tuning on Nebius Token Factory.",
+   code:"https://github.com/mdkrasnow/sia-lever",demo:"https://drive.google.com/file/d/1jlZsBlfAHtL-ha5zo2OcedbI8M2XNvKz/view?usp=drive_link"},
+  {n:"Sentinel · SIA²",h:"ankitshah009",t:"Applied",nb:1,
+   d:"A self-improving ad-creative authenticity agent that rewrites its own detector each generation to catch new AI ad-generators single-signal models miss (recall 0→96%). Runs on Nebius.",
+   code:"https://github.com/ankitshah009/sentinel_self_improving_authenticity",demo:"https://youtu.be/saK7NpJLU3g"},
+  {n:"SIA Query",h:"Kush614",t:"Applied",nb:0,
+   d:"An agent that rewrites its own text-to-SQL code generation after generation — no human edits, same base model — verified against an ungameable execution-accuracy grader (75.8→95%).",
+   code:"https://github.com/Kush614/sia-self-improving-text-to-sql",demo:"https://www.loom.com/share/8454512059b245dcbd6228f2d616997c",live:"https://kush614.github.io/sia-self-improving-text-to-sql/"},
+  {n:"Haggle · Agent Commerce",h:"Leapfrogger-ai",t:"Applied",nb:1,
+   d:"An AI that rewrites its own code to win at haggling — predicting a Craigslist deal’s final price from a chat with the ending hidden, improving every generation. Open models on Nebius.",
+   code:"https://github.com/Leapfrogger-ai/oss-sia-haggle"},
+  {n:"Self-Improving Verifier Optimizer",h:"skyzer",t:"Research",nb:0,
+   d:"A visual demo of SIA’s core safety lesson: reward the wrong thing and a self-improving agent gets better at the wrong thing. An independent optimizer evaluates the verifier itself.",
+   code:"https://github.com/skyzer/self-improving-agent-verifier-optimizer",live:"https://skyzer.github.io/self-improving-agent-verifier-optimizer/"},
+  {n:"YOLO · Autonomous Trader",h:"KaushikSiva",t:"Applied",nb:0,
+   d:"An autonomous portfolio manager wired to a live Robinhood account — reads balances and positions, decides buy/hold/trim/exit, and uses SIA to self-improve daily.",
+   code:"https://github.com/KaushikSiva/ai-trader",demo:"https://youtu.be/t4v--xPvFSc"},
+  {n:"SIAKernel",h:"whatdhack",t:"Framework",nb:0,
+   d:"Leverages SIA to improve GPU kernels — wiring an external kernel-benchmarking oracle into SIA’s scorer so kernel execution metrics drive harness improvement.",
+   code:"https://github.com/whatdhack/SIAKernel"},
+  {n:"Darwinian AI Civilization",h:"kshivam4781",t:"Framework",nb:1,
+   d:"Populations of harness agents with unique DNA compete each generation; fitness selects elites, crossover and mutation breed offspring, and a “civilization” remembers winning traits.",
+   code:"https://github.com/kshivam4781/DarwinianSIA"},
+  {n:"SEC 10-K / 10-Q Agent",h:"CuriousDima",t:"Applied",nb:0,
+   d:"Agents that answer questions from SEC 10-K/10-Q filings by extracting both numbers and meaning — self-improving across generations (0.72→0.88) on a custom finance benchmark.",
+   code:"https://github.com/CuriousDima/sec-10k-10q-qa"},
+  {n:"Startup Wedge Autoresearch",h:"DynamicResonance",t:"Applied",nb:0,
+   d:"Generates and grades startup “wedges” against an investor’s rubric — getting sharper as SIA chooses the operator and uses a harness. Most pre-seed ideas aren’t fundable; this fixes that.",
+   demo:"https://www.tella.tv/video/ai-powered-startup-idea-generator-ahb8",note:"repo private"},
+  {n:"FailSafe",h:"ayaelnakeb",t:"Framework",nb:1,
+   d:"Auto-clusters per-class failures from results.json and hard-injects them into every feedback prompt — replacing SIA’s passive pointer with structured, generation-persistent failure signal.",
+   code:"https://github.com/ayaelnakeb/sia",demo:"https://drive.google.com/file/d/1YQYcuV_lFqmOxhatRT52g1uhLHb2VsPu/view?usp=sharing"}
+];
+
+const TRACKS=["All","Applied","Framework","Research"];
+let active="All";
+const grid=document.getElementById('grid');
+const filters=document.getElementById('filters');
+
+function counts(t){return t==="All"?P.length:P.filter(p=>p.t===t).length}
+TRACKS.forEach(t=>{
+  const b=document.createElement('button');
+  b.className='filter';b.setAttribute('aria-pressed',t===active);
+  b.innerHTML=`${t==="All"?"All projects":t+" AI"} <span class="ct">${counts(t)}</span>`;
+  b.onclick=()=>{active=t;[...filters.children].forEach(c=>c.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');render()};
+  filters.appendChild(b);
+});
+
+function linkBtn(href,label,icon,primary){
+  return `<a class="btn ${primary?'primary':''}" href="${href}" target="_blank" rel="noopener">${icon} ${label}</a>`;
+}
+function card(p){
+  const cls=p.t.toLowerCase();
+  let links="";
+  if(p.code) links+=linkBtn(p.code,"Code",ICON.code,true);
+  if(p.demo) links+=linkBtn(p.demo,"Demo",ICON.play,false);
+  if(p.live) links+=linkBtn(p.live,"Live",ICON.ext,false);
+  const accent=cls==="applied"?"#46d6ff":cls==="framework"?"#c08bff":"#5ef2a8";
+  const footer = links
+    ? `<div class="links">${links}</div>`
+    : `<div class="none">${p.note==="repo private"?"// repo private — demo only":"// no public links"}</div>`;
+  return `<article class="card" data-track="${p.t}" style="--accent:${accent}">
+    <div class="card-top">
+      <span class="pill ${cls}">${p.t}</span>
+      ${p.nb?'<span class="nebius"><span class="b"></span>NEBIUS</span>':''}
+    </div>
+    <h3>${p.n}</h3>
+    <div class="by">by <a href="https://github.com/${p.h}" target="_blank" rel="noopener">@${p.h}</a></div>
+    <p class="desc">${p.d}</p>
+    ${footer}
+  </article>`;
+}
+function render(){
+  const list=active==="All"?P:P.filter(p=>p.t===active);
+  grid.innerHTML=list.map(card).join('');
+  const cards=[...grid.children];
+  cards.forEach((c,i)=>{setTimeout(()=>c.classList.add('in'),40+i*45)});
+}
+render();
+</script>
+</body>
+</html>
