@@ -111,6 +111,13 @@
     -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
     -webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:.22s;pointer-events:none}
   .card:hover::before{opacity:.55}
+  .thumb{margin:-22px -22px 2px;height:158px;border-radius:15px 15px 0 0;overflow:hidden;position:relative;background:var(--bg2)}
+  .thumb img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;opacity:0;transition:opacity .35s ease,transform .3s ease}
+  .thumb img.ld{opacity:1}
+  .card:hover .thumb img{transform:scale(1.045)}
+  .thumb.ph{display:grid;place-items:center}
+  .thumb.ph .ini{font-family:"Space Grotesk";font-weight:700;font-size:42px;color:var(--accent,var(--acc));opacity:.5}
+  .thumb.ph::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(130% 120% at 25% 0%,rgba(94,242,168,.12),transparent 55%)}
   .card-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .pill{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.03em;
     padding:4px 9px;border-radius:6px;border:1px solid;text-transform:uppercase}
@@ -277,6 +284,22 @@ const P = [
 ];
 
 // Track first-prize winners. Fill each with the winning project's exact `n` (name) below.
+const SHOTS={
+  "actionstockplus-ui":"https://mzuilafablsxexaqszzj.supabase.co/storage/v1/object/public/screenshots/89ed2045-9025-4dfd-b4fb-b6fa3945d1c7/screenshot.webp",
+  "francisco-perez-sorrosal":"https://mzuilafablsxexaqszzj.supabase.co/storage/v1/object/public/screenshots/4aedd8eb-9ca3-45de-b0f9-f8a473987c39/screenshot.webp",
+  "hsehskad":"https://mzuilafablsxexaqszzj.supabase.co/storage/v1/object/public/screenshots/72a23c96-2b1c-45c7-9231-8b5f494ed064/screenshot.webp",
+  "rayshineeeee":"https://mzuilafablsxexaqszzj.supabase.co/storage/v1/object/public/screenshots/83ebf15b-a7c5-4a32-a961-669a495e2474/screenshot.webp",
+  "tmc":"https://mzuilafablsxexaqszzj.supabase.co/storage/v1/object/public/screenshots/e287fcef-238f-4041-851a-5d4cf068b1f0/screenshot.webp",
+  "mdkrasnow":"https://mzuilafablsxexaqszzj.supabase.co/storage/v1/object/public/screenshots/13deec47-ccdb-403a-a49e-e914a1c82373/screenshot.webp",
+  "ankitshah009":"https://mzuilafablsxexaqszzj.supabase.co/storage/v1/object/public/screenshots/4b1484f6-d8ab-4495-a1e0-4356bdba6d40/screenshot.webp",
+  "kush614":"https://mzuilafablsxexaqszzj.supabase.co/storage/v1/object/public/screenshots/37b58eda-8822-4691-99b2-9a19a1f73d1c/screenshot.webp",
+  "leapfrogger-ai":"https://mzuilafablsxexaqszzj.supabase.co/storage/v1/object/public/screenshots/db48d5f5-ac79-401d-b7f9-5fa6968f0d2c/screenshot.webp",
+  "skyzer":"https://mzuilafablsxexaqszzj.supabase.co/storage/v1/object/public/screenshots/9972d60f-ed6a-42a3-8cc6-d7d862c7a7e7/screenshot.webp",
+  "kaushiksiva":"https://mzuilafablsxexaqszzj.supabase.co/storage/v1/object/public/screenshots/bb4f72c7-60b7-47db-ac31-42f86e031b00/screenshot.webp",
+  "curiousdima":"https://mzuilafablsxexaqszzj.supabase.co/storage/v1/object/public/screenshots/446f56c2-e11c-4896-9078-799631cfdf5d/screenshot.webp",
+  "dynamicresonance":"https://mzuilafablsxexaqszzj.supabase.co/storage/v1/object/public/screenshots/8455367c-b808-4ef1-b7df-bfaa3c57d8a5/screenshot.webp"
+};
+function imgFail(img,ini){const t=img.parentNode;t.classList.add('ph');t.innerHTML='<span class="ini">'+ini+'</span>';}
 const WINNERS={Applied:null,Framework:null,Research:null};
 const TRACKINFO=[
   {key:"Applied",label:"Applied AI Track",color:"#46d6ff"},
@@ -328,7 +351,13 @@ function card(p){
     ? `<div class="links">${links}</div>`
     : `<div class="none">${p.note==="repo private"?"// repo private — demo only":"// no public links"}</div>`;
   const win=isWinner(p);
+  const shot=SHOTS[p.h.toLowerCase()];
+  const ini=(p.n.match(/[A-Za-z0-9]/)||['?'])[0].toUpperCase();
+  const thumb=shot
+    ? `<div class="thumb"><img src="${shot}" loading="lazy" alt="${p.n} preview" onload="this.classList.add('ld')" onerror="imgFail(this,'${ini}')"></div>`
+    : `<div class="thumb ph"><span class="ini">${ini}</span></div>`;
   return `<article class="card${win?' winner':''}" data-track="${p.t}" style="--accent:${accent}">
+    ${thumb}
     <div class="card-top">
       <span class="pill ${cls}">${p.t}</span>
       ${win?'<span class="badge-win">🏆 WINNER</span>':''}
